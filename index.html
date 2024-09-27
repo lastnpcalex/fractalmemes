@@ -254,16 +254,25 @@
             drawFractal();
         }
 
-        // Mandelbrot Set Implementation
+        // Mandelbrot Set Implementation with Random Zoom
         function drawMandelbrotSet(ctx, maxIterations) {
             const width = backgroundCanvas.width;
             const height = backgroundCanvas.height;
 
             const imageData = ctx.createImageData(width, height);
 
-            // Define the region of the complex plane to visualize
-            const xmin = -2.5, xmax = 1;
-            const ymin = -1.5, ymax = 1.5;
+            // Random zoom parameters
+            const zoomLevel = Math.random() * 2 + 1; // Zoom between 1x and 3x
+            const xCenter = Math.random() * 3.5 - 2.5; // Random x between -2.5 and 1
+            const yCenter = Math.random() * 3 - 1.5;   // Random y between -1.5 and 1.5
+
+            const zoomWidth = 3.5 / zoomLevel;
+            const zoomHeight = 3.0 / zoomLevel;
+
+            const xmin = xCenter - zoomWidth / 2;
+            const xmax = xCenter + zoomWidth / 2;
+            const ymin = yCenter - zoomHeight / 2;
+            const ymax = yCenter + zoomHeight / 2;
 
             // Generate a color palette
             const palette = [];
@@ -309,10 +318,14 @@
             ctx.putImageData(imageData, 0, 0);
         }
 
-        // Barnsley Fern Implementation
+        // Barnsley Fern Implementation with Random Zoom and Rotation
         function drawBarnsleyFern(ctx, iterations) {
             const width = backgroundCanvas.width;
             const height = backgroundCanvas.height;
+
+            // Random scale and rotation
+            const scale = Math.random() * 0.5 + 0.5; // Scale between 0.5 and 1
+            const rotation = Math.random() * 360; // Rotation angle in degrees
 
             // Colors
             const color1 = getRandomColor();
@@ -326,6 +339,13 @@
             ctx.fillRect(0, 0, width, height);
 
             ctx.fillStyle = '#000'; // Draw fern in black
+
+            // Translate and rotate context
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.rotate((rotation * Math.PI) / 180);
+            ctx.scale(scale, scale);
+            ctx.translate(-width / 2, -height / 2);
 
             let x = 0;
             let y = 0;
@@ -358,15 +378,18 @@
 
                 ctx.fillRect(px, py, 1, 1);
             }
+
+            ctx.restore();
         }
 
-        // Fractal Tree Implementation
+        // Fractal Tree Implementation with Random Zoom and Variation
         function drawFractalTree(ctx, x1, y1, angle, depth) {
             if (depth === 0) {
                 return;
             }
 
-            const length = depth * 10;
+            const maxDepth = 9;
+            const length = (depth / maxDepth) * (Math.random() * 100 + 50);
 
             // Calculate the end point
             const x2 = x1 + length * Math.cos(angle * Math.PI / 180);
@@ -380,9 +403,12 @@
             ctx.lineTo(x2, y2);
             ctx.stroke();
 
+            // Random variation in branching angles
+            const angleVariation = Math.random() * 20 + 10;
+
             // Recursive calls
-            drawFractalTree(ctx, x2, y2, angle - 20, depth - 1);
-            drawFractalTree(ctx, x2, y2, angle + 20, depth - 1);
+            drawFractalTree(ctx, x2, y2, angle - angleVariation, depth - 1);
+            drawFractalTree(ctx, x2, y2, angle + angleVariation, depth - 1);
         }
 
         // Regenerate background when the button is clicked
