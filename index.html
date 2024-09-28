@@ -148,7 +148,7 @@
         let branches = 3; // Default number of branches for Romanesco Broccoli
         let rotationAngle = 0; // Default rotation angle for Romanesco Broccoli
         let branchRotationAngle = 0; // Default branch rotation angle
-        let spiralFactor = 0.2; // Default spacing for Romanesco Broccoli
+        let spiralFactor = 0.2; // Default spacing for fractals
         let backgroundVisible = true; // Background visibility flag
 
         // Off-screen canvas for the background
@@ -245,7 +245,7 @@
                     break;
                 case 'barnsleyFernImage':
                     depth = 5;
-                    depthSlider.max = 10;
+                    depthSlider.max = 12;
                     selectedMaskShape = 'triangle';
                     break;
                 case 'romanescoBroccoli':
@@ -255,7 +255,7 @@
                     break;
                 case 'threeBranchesTree':
                     depth = 5;
-                    depthSlider.max = 12;
+                    depthSlider.max = 9;
                     selectedMaskShape = 'triangle';
                     break;
                 case 'quadraticCross':
@@ -289,6 +289,10 @@
             if (selectedFractal === 'romanescoBroccoli') {
                 branchesControls.style.display = 'flex';
                 rotationControls.style.display = 'flex';
+                spacingControls.style.display = 'flex';
+            } else if (selectedFractal === 'barnsleyFernImage' || selectedFractal === 'threeBranchesTree') {
+                branchesControls.style.display = 'none';
+                rotationControls.style.display = 'none';
                 spacingControls.style.display = 'flex';
             } else {
                 branchesControls.style.display = 'none';
@@ -638,7 +642,8 @@
         // Draw the initial background fractal
         generateBackgroundColors();
         drawBackgroundFractal();
- // Fractal Drawing Functions
+
+        // Fractal Drawing Functions
 
         // 1. Sierpinski Triangle Implementation
         function drawSierpinski(ctx, img, depth) {
@@ -881,8 +886,8 @@
 
             // Calculate the end point
             const rad = angle * Math.PI / 180;
-            const x2 = x + length * Math.cos(rad);
-            const y2 = y + length * Math.sin(rad);
+            const x2 = x + length * spiralFactor * Math.cos(rad);
+            const y2 = y + length * spiralFactor * Math.sin(rad);
 
             // Draw the image at this branch
             ctx.save();
@@ -925,7 +930,7 @@
             ctx.restore();
 
             // Recursively draw branches
-            const newLength = length * 0.6; // Adjust as needed
+            const newLength = length * spiralFactor; // Adjust as needed
             const angleVariation = 25; // Adjust branching angle
 
             drawFernBranch(ctx, img, x2, y2, angle - angleVariation, newLength, depth - 1);
@@ -1058,8 +1063,8 @@
 
             // Calculate the end point
             const rad = angle * Math.PI / 180;
-            const x2 = x + length * Math.cos(rad);
-            const y2 = y + length * Math.sin(rad);
+            const x2 = x + length * spiralFactor * Math.cos(rad);
+            const y2 = y + length * spiralFactor * Math.sin(rad);
 
             // Draw the image at this branch
             ctx.save();
@@ -1102,7 +1107,7 @@
             ctx.restore();
 
             // Recursively draw branches
-            const newLength = length * 0.7; // Adjust as needed
+            const newLength = length * spiralFactor; // Adjust as needed
             const angleVariation = 30; // Adjust branching angle
 
             drawTreeBranch(ctx, img, x2, y2, angle - angleVariation, newLength, depth - 1);
